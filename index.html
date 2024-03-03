@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #f0f0f0;
+    }
+
+    #lock {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .dot {
+      width: 20px;
+      height: 20px;
+      background-color: #ccc;
+      border-radius: 50%;
+      margin: 5px;
+    }
+
+    #message {
+      margin-top: 20px;
+      font-weight: bold;
+      color: red;
+    }
+
+    #passwordInput {
+      margin-top: 10px;
+      padding: 5px;
+      font-size: 16px;
+    }
+
+    #confirmButton {
+      margin-top: 10px;
+      padding: 8px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .lock {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: row-reverse;
+        position: relative;
+        margin-bottom: 20px;
+        
+    }
+    .lock-head {
+        width: 200px;
+        height: 100px;
+        border-radius: 10px;
+        background-color: rgb(212, 152, 21);
+        border: 1px solid black;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: absolute;
+        top: -9px;
+        left: 0;
+        z-index: 9;
+        transition: ease-in-out 2s
+    }
+    .lock-head:before {
+        content: '';
+        display: block;
+        width: 60px;
+        height: 60px;
+        transition: ease-in-out .4s;
+        background-size: 60px;
+        background-repeat: no-repeat;
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB4PSIwIiB5PSIwIiB2aWV3Qm94PSIwIDAgMjQgMjQiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUxMiA1MTIiIHhtbDpzcGFjZT0icHJlc2VydmUiIGNsYXNzPSIiPjxnPjxwYXRoIGQ9Ik0xOS41NCA5SDE5VjhBNyA3IDAgMCAwIDUgOHYxaC0uNTRhMS45NjIgMS45NjIgMCAwIDAtMS45NiAxLjk2djEwLjA4QTEuOTYyIDEuOTYyIDAgMCAwIDQuNDYgMjNoMTUuMDhhMS45NjIgMS45NjIgMCAwIDAgMS45Ni0xLjk2VjEwLjk2QTEuOTYyIDEuOTYyIDAgMCAwIDE5LjU0IDl6TTYgOGE2IDYgMCAwIDEgMTIgMHYxaC0yVjhhNCA0IDAgMCAwLTggMHYxSDZ6bTkgMUg5VjhhMyAzIDAgMCAxIDMtMyAzLjAxNyAzLjAxNyAwIDAgMSAzIDN6bTUuNSAxMi4wNGEuOTUuOTUgMCAwIDEtLjk2Ljk2SDQuNDZhLjk1Ljk1IDAgMCAxLS45Ni0uOTZWMTAuOTZhLjk1Ljk1IDAgMCAxIC45Ni0uOTZoMTUuMDhhLjk1Ljk1IDAgMCAxIC45Ni45NnoiIGZpbGw9IiMwMDAwMDAiIG9wYWNpdHk9IjEiIGRhdGEtb3JpZ2luYWw9IiMwMDAwMDAiIGNsYXNzPSIiPjwvcGF0aD48cGF0aCBkPSJNMTIgMTJhMi41IDIuNSAwIDAgMC0yLjUgMi41IDIuNDc2IDIuNDc2IDAgMCAwIDEgMnYyYTEuNSAxLjUgMCAwIDAgMyAwdi0yYTIuNDc2IDIuNDc2IDAgMCAwIDEtMkEyLjUgMi41IDAgMCAwIDEyIDEyem0uNzQ4IDMuOGEuNS41IDAgMCAwLS4yNDguNDMyVjE4LjVhLjUuNSAwIDAgMS0xIDB2LTIuMjdhLjUuNSAwIDAgMC0uMjQ4LS40MzIgMS41IDEuNSAwIDEgMSAxLjUgMHoiIGZpbGw9IiMwMDAwMDAiIG9wYWNpdHk9IjEiIGRhdGEtb3JpZ2luYWw9IiMwMDAwMDAiIGNsYXNzPSIiPjwvcGF0aD48L2c+PC9zdmc+");
+    }
+    .unlocked .lock-head:before {
+        background-image: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZlcnNpb249IjEuMSIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHdpZHRoPSI1MTIiIGhlaWdodD0iNTEyIiB4PSIwIiB5PSIwIiB2aWV3Qm94PSIwIDAgNTEyIDUxMiIgc3R5bGU9ImVuYWJsZS1iYWNrZ3JvdW5kOm5ldyAwIDAgNTEyIDUxMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgY2xhc3M9IiI+PGc+PHBhdGggZD0iTTM3Mi41OCAyMjMuMjc4SDE4My43MzR2LTg2LjQwMmMwLTEyLjcxMSA1LjAxNS0yNC42MzMgMTQuMTIyLTMzLjU2NyA5LjEwMi04LjkzIDIxLjExMy0xMy42NjIgMzMuODQ1LTEzLjQ3NSAyNS40NC40ODIgNDYuMTM2IDIyLjAzNiA0Ni4xMzYgNDguMDQ2djcuMTIzYzAgMjQuNzY1IDIwLjE0OCA0NC45MTIgNDQuOTEyIDQ0LjkxMiAyNC43NjUgMCA0NC45MTItMjAuMTQ4IDQ0LjkxMi00NC45MTJ2LTguMTI3YzAtMzYuNzU5LTE0LjQyMS03MS4yODYtNDAuNjA2LTk3LjIxOEMzMDEuMTk5IDE0LjA1MSAyNjcuMDY1IDAgMjMwLjgwMSAwYy0uNDUzIDAtLjkxLjAwMy0xLjM2NC4wMDZDMTU0LjcwOC43MyA5My45MDkgNjIuODQgOTMuOTA5IDEzOC40NTd2ODQuODIxSDg4Ljk5Yy0yNC40MSAwLTQ0LjI3MSAxOS44Ni00NC4yNzEgNDQuMjcxdjIwMC4xOEM0NC43MiA0OTIuMTQgNjQuNTggNTEyIDg4Ljk5MSA1MTJIMzcyLjU4YzI0LjQxIDAgNDQuMjcxLTE5Ljg2IDQ0LjI3MS00NC4yNzF2LTIwMC4xOGMtLjAwMS0yNC40MTEtMTkuODYxLTQ0LjI3MS00NC4yNzEtNDQuMjcxem0tMjUzLjAwNy04NC44MjFjMC02MS42MDMgNDkuMzk2LTExMi4yIDExMC4xMTItMTEyLjc4OS4zNy0uMDAzLjczOC0uMDA1IDEuMTA3LS4wMDUgMjkuNDU2IDAgNTcuMTkxIDExLjQyMSA3OC4yMDMgMzIuMjI5IDIxLjI4MSAyMS4wNzUgMzMgNDkuMTI1IDMzIDc4Ljk4M3Y4LjEyOGMwIDEwLjYxMy04LjYzNSAxOS4yNDgtMTkuMjQ4IDE5LjI0OHMtMTkuMjQ4LTguNjM1LTE5LjI0OC0xOS4yNDh2LTcuMTIzYzAtMzkuODk2LTMxLjk5Mi03Mi45NTktNzEuMzEzLTczLjcwNS0xOS43MDUtLjM3OS0zOC4yNDYgNy4wMTktNTIuMzA1IDIwLjgxNS0xNC4wNjUgMTMuODAyLTIxLjgxMiAzMi4yMjgtMjEuODEyIDUxLjg4OHY4Ni40MDFoLTM4LjQ5NnYtODQuODIyem0yNzEuNjEzIDMyOS4yNzJjMCAxMC4yNTktOC4zNDcgMTguNjA3LTE4LjYwNyAxOC42MDdIODguOTkxYy0xMC4yNTkgMC0xOC42MDctOC4zNDctMTguNjA3LTE4LjYwN3YtMjAwLjE4YzAtMTAuMjU5IDguMzQ3LTE4LjYwNyAxOC42MDctMTguNjA3SDM3Mi41OGMxMC4yNTkgMCAxOC42MDcgOC4zNDcgMTguNjA3IDE4LjYwN3YyMDAuMTh6IiBmaWxsPSIjMDAwMDAwIiBvcGFjaXR5PSIxIiBkYXRhLW9yaWdpbmFsPSIjMDAwMDAwIiBjbGFzcz0iIj48L3BhdGg+PHBhdGggZD0iTTIzMC43ODUgMjc0LjE3OWMtMzEuNjA0IDAtNTcuMzE3IDI1LjcxMi01Ny4zMTcgNTcuMzE2IDAgMTYuMjMgNi45MzEgMzEuNjQ4IDE4LjgyMSA0Mi40NDZ2NzQuMzI2YzAgNy4wODYgNS43NDUgMTIuODMyIDEyLjgzMiAxMi44MzJoNTEuMzI4YzcuMDg3IDAgMTIuODMyLTUuNzQ2IDEyLjgzMi0xMi44MzJ2LTc0LjMyNmMxMS44OS0xMC43OTggMTguODIxLTI2LjIxNiAxOC44MjEtNDIuNDQ2LS4wMDEtMzEuNjA0LTI1LjcxMy01Ny4zMTYtNTcuMzE3LTU3LjMxNnptMTguMjUgODMuMTY3YTEyLjgzNSAxMi44MzUgMCAwIDAtNS40MTggMTAuNDc0djY3LjYxNWgtMjUuNjY0VjM2Ny44MmMwLTQuMTYzLTIuMDItOC4wNjgtNS40MTgtMTAuNDc0LTguMzkyLTUuOTQxLTEzLjQwMi0xNS42MDQtMTMuNDAyLTI1Ljg1MiAwLTE3LjQ1MyAxNC4xOTktMzEuNjUyIDMxLjY1My0zMS42NTJzMzEuNjUzIDE0LjE5OSAzMS42NTMgMzEuNjUyYy0uMDAyIDEwLjI0Ny01LjAxMiAxOS45MTEtMTMuNDA0IDI1Ljg1MnpNNDYwLjg2MiAyMTYuMzM2bC00NC44MjItMjUuODc4Yy02LjEzNi0zLjU0My0xMy45ODQtMS40NDEtMTcuNTI5IDQuNjk3LTMuNTQ0IDYuMTM4LTEuNDQxIDEzLjk4NCA0LjY5NyAxNy41MjlsNDQuODIyIDI1Ljg3OGExMi44MjUgMTIuODI1IDAgMCAwIDE3LjUyOC00LjY5N2MzLjU0NS02LjEzOCAxLjQ0MS0xMy45ODUtNC42OTYtMTcuNTI5ek00MDkuNjM1IDE2My4wNzZjMi4xNzYgMCA0LjM4My0uNTU2IDYuNDA0LTEuNzIybDQ0LjgyMi0yNS44NzdjNi4xMzgtMy41NDMgOC4yNDEtMTEuMzkxIDQuNjk3LTE3LjUyOS0zLjU0My02LjEzOC0xMS4zOTItOC4yNDItMTcuNTI5LTQuNjk3bC00NC44MjIgMjUuODc3Yy02LjEzOCAzLjU0My04LjI0MSAxMS4zOTEtNC42OTcgMTcuNTI5YTEyLjgyNyAxMi44MjcgMCAwIDAgMTEuMTI1IDYuNDE5eiIgZmlsbD0iIzAwMDAwMCIgb3BhY2l0eT0iMSIgZGF0YS1vcmlnaW5hbD0iIzAwMDAwMCIgY2xhc3M9IiI+PC9wYXRoPjwvZz48L3N2Zz4=");
+    }
+    .unlocked .lock-head {
+        left: 260px;
+    }
+    .lock-body {
+        position: relative;
+        width: 250px;
+        height: 80px;
+        border-radius:0 10px 10px 0 ;
+        background-color: rgb(92, 92, 92);
+        border: 1px solid black;
+    }
+    .dots {
+        display: flex;
+        justify-content: center;
+    }
+  </style>
+  <title>Cadeado</title>
+</head>
+<body>
+
+<div id="lock">
+    <div class="lock">
+        <div class="lock-head"></div>
+        <div class="lock-body"></div>
+    </div>
+    <div class="dots">
+        <div class="dot" id="dot1"></div>
+        <div class="dot" id="dot2"></div>
+        <div class="dot" id="dot3"></div>
+    </div>
+
+  <input type="number" id="passwordInput" placeholder="Digite a senha">
+  <button id="confirmButton" onclick="checkPassword()">Confirmar</button>
+  <div id="message"></div>
+</div>
+
+<script>
+  const password = "042";
+  let input = "";
+  let attempts = 0;
+
+  function updateDots() {
+    for (let i = 1; i <= 3; i++) {
+      const dot = document.getElementById(`dot${i}`);
+      dot.style.backgroundColor = "#ccc";
+    }
+
+    for (let i = 0; i < input.length; i++) {
+      const dot = document.getElementById(`dot${i + 1}`);
+      dot.style.backgroundColor = input[i] === password[i] ? "green" : "yellow";
+    }
+  }
+
+  function checkPassword() {
+    input = document.getElementById("passwordInput").value;
+
+    if (input === password) {
+      document.getElementById("message").innerText = "Senha correta!";
+      // Adicione aqui o que deseja fazer quando a senha estiver correta
+      document.querySelector('.lock').classList.add('unlocked')
+    } else {
+      attempts++;
+      document.getElementById("message").innerText = `Senha incorreta. Tentativas: ${attempts}/3`;
+
+      if (attempts === 3) {
+        document.getElementById("message").innerText = "Você excedeu o número de tentativas. O cadeado será reiniciado.";
+        setTimeout(() => {
+          input = "";
+          attempts = 0;
+          updateDots();
+          document.getElementById("passwordInput").value = "";
+          document.getElementById("message").innerText = "";
+        }, 2000);
+      }
+    }
+
+    updateDots();
+    document.getElementById("passwordInput").value = "";
+  }
+</script>
+
+</body>
+</html>
