@@ -118,48 +118,54 @@
 </div>
 
 <script>
-  const password = "042";
-  let input = "";
-  let attempts = 0;
+const password = "042";
+let input = "";
+let attempts = 0;
 
-  function updateDots() {
-    for (let i = 1; i <= 3; i++) {
-      const dot = document.getElementById(`dot${i}`);
-      dot.style.backgroundColor = "#ccc";
-    }
-
-    for (let i = 0; i < input.length; i++) {
-      const dot = document.getElementById(`dot${i + 1}`);
-      dot.style.backgroundColor = input[i] === password[i] ? "green" : "yellow";
-    }
+function updateDots() {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById(`dot${i}`);
+    dot.style.backgroundColor = "#ccc";
   }
 
-  function checkPassword() {
-    input = document.getElementById("passwordInput").value;
-
-    if (input === password) {
-      document.getElementById("message").innerText = "Senha correta!";
-      // Adicione aqui o que deseja fazer quando a senha estiver correta
-      document.querySelector('.lock').classList.add('unlocked')
+  for (let i = 0; i < input.length; i++) {
+    const dot = document.getElementById(`dot${i + 1}`);
+    if (input[i] === password[i]) {
+      dot.style.backgroundColor = "green";
+    } else if (password.includes(input[i])) {
+      dot.style.backgroundColor = "yellow";
     } else {
-      attempts++;
-      document.getElementById("message").innerText = `Senha incorreta. Tentativas: ${attempts}/3`;
-
-      if (attempts === 3) {
-        document.getElementById("message").innerText = "Você excedeu o número de tentativas. O cadeado será reiniciado.";
-        setTimeout(() => {
-          input = "";
-          attempts = 0;
-          updateDots();
-          document.getElementById("passwordInput").value = "";
-          document.getElementById("message").innerText = "";
-        }, 2000);
-      }
+      dot.style.backgroundColor = "red";
     }
-
-    updateDots();
-    document.getElementById("passwordInput").value = "";
   }
+}
+
+function checkPassword() {
+  input = document.getElementById("passwordInput").value;
+
+  if (input === password) {
+    document.getElementById("message").innerText = "Senha correta!";
+    // Adicione aqui o que deseja fazer quando a senha estiver correta
+    document.querySelector('.lock').classList.add('unlocked');
+  } else {
+    attempts++;
+    document.getElementById("message").innerText = `Senha incorreta. Tentativas: ${attempts}/3`;
+
+    if (attempts === 3) {
+      document.getElementById("message").innerText = "Você excedeu o número de tentativas. O cadeado será reiniciado.";
+      setTimeout(() => {
+        input = "";
+        attempts = 0;
+        updateDots();
+        document.getElementById("passwordInput").value = "";
+        document.getElementById("message").innerText = "";
+      }, 2000);
+    }
+  }
+
+  updateDots();
+  document.getElementById("passwordInput").value = "";
+}
 </script>
 
 </body>
